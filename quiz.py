@@ -1,7 +1,6 @@
 import requests
 import json
 import random
-import re
 
 def get_correct_prompt(prompt):
     while True:
@@ -50,8 +49,6 @@ def show_question(question):
     a, b, c, d = all_answers
     print(c)
     answer = get_correct_answer("Choose one of the following: a, b, c or d \n")
-    # if answer == 'd':
-    #     print("answer is correct")
 
 def show_answers(question):
     global all_answers
@@ -63,12 +60,6 @@ def show_answers(question):
     all_answers = (incorrect_answers + [correct_answer])
     for _ in range(len(all_answers)):
         print(chr(ord('a') + _), all_answers[_])
-
-
-# print(json_obj[1]["incorrect_answers"])
-
-# for _ in range(len(json_obj)):
-#     print(json_obj[_]['question'])
 
 for _ in range(number_of_questions):
     show_question(_)
