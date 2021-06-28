@@ -39,27 +39,40 @@ json_obj = response.json()["results"]
 all_answers = list()
 incorrect_answers = list()
 correct_answer = list()
+points = 0
 
 def show_question(question):
+    global points
     print(json_obj[question]['question'])
     print()
     show_answers(question)
-    print("correct answer is: ", correct_answer)
-    print(all_answers)
-    a, b, c, d = all_answers
-    print(c)
+    # print("correct answer is: ", correct_answer)
+    # print(all_answers)
     answer = get_correct_answer("Choose one of the following: a, b, c or d \n")
+    if answer == "d":
+        print("This is correct answer")
+        points += points
+    else:
+        print("Sorry, wrong answer :(")
 
 def show_answers(question):
     global all_answers
     global incorrect_answers
-    global correct_answer
-    incorrect_answers = json_obj[question]["incorrect_answers"]
     correct_answer = json_obj[question]["correct_answer"]
-    all_answers.append(incorrect_answers)
-    all_answers = (incorrect_answers + [correct_answer])
-    for _ in range(len(all_answers)):
-        print(chr(ord('a') + _), all_answers[_])
+    incorrect_answers = json_obj[question]["incorrect_answers"]
+    possible_answers = [
+        [incorrect_answers[0], "a"],
+        [incorrect_answers[1], "b"],
+        [incorrect_answers[2], "c"],
+        [correct_answer, "d"]
+    ]
+    possible_anwers_shuffled = random.sample(possible_answers, len(possible_answers))
+    print(possible_anwers_shuffled)
+    # for _ in range(len(all_answers)):
+    #     print(chr(ord('a') + _), all_answers[_])
+    for _ in range(len(possible_answers)):
+        print(possible_answers[_][0])
+    print()
 
 for _ in range(number_of_questions):
     show_question(_)
