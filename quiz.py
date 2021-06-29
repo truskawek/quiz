@@ -1,5 +1,4 @@
 import requests
-import json
 import random
 
 def get_correct_prompt(prompt):
@@ -21,13 +20,13 @@ def get_correct_answer(prompt):
     while True:
         try:
             value = input(prompt).lower()
-            if value not in ['a','b','c','d']:
+            if not value in ["a", "b", "c", "d"]:
                 print("Please enter only one character: a, b, c or d")
                 continue
             else:
                 break
         except ValueError:
-            print("Enter correct value")
+            print("Enter correct value", ValueError)
         
     return value
 
@@ -40,24 +39,19 @@ all_answers = list()
 incorrect_answers = list()
 correct_answer = list()
 points = 0
+possible_answers = list()
 
 def show_question(question):
-    global points
     print(json_obj[question]['question'])
     print()
     show_answers(question)
-    # print("correct answer is: ", correct_answer)
-    # print(all_answers)
-    answer = get_correct_answer("Choose one of the following: a, b, c or d \n")
-    if answer == "d":
-        print("This is correct answer")
-        points += points
-    else:
-        print("Sorry, wrong answer :(")
 
 def show_answers(question):
     global all_answers
     global incorrect_answers
+    global possible_answers
+    global points
+    correct_answer_from_shuffled = list()
     correct_answer = json_obj[question]["correct_answer"]
     incorrect_answers = json_obj[question]["incorrect_answers"]
     possible_answers = [
@@ -66,13 +60,35 @@ def show_answers(question):
         [incorrect_answers[2], "c"],
         [correct_answer, "d"]
     ]
-    possible_anwers_shuffled = random.sample(possible_answers, len(possible_answers))
-    print(possible_anwers_shuffled)
-    # for _ in range(len(all_answers)):
-    #     print(chr(ord('a') + _), all_answers[_])
-    for _ in range(len(possible_answers)):
-        print(possible_answers[_][0])
+    possible_answers_shuffled = random.sample(possible_answers, len(possible_answers))
+    possible_answers_shuffled_list = [
+        [possible_answers_shuffled[0][0], "a"],
+        [possible_answers_shuffled[1][0], "b"],
+        [possible_answers_shuffled[2][0], "c"],
+        [possible_answers_shuffled[3][0], "d"]
+    ]
+
+    # uncomment the line below to test the quiz and always first show the correct answer
+    # print(correct_answer)
+    # or just google the right answer :)
+
+    for _ in range(len(possible_answers_shuffled_list)):
+        letter = chr(ord("a") + _)
+        print('{letter}. {question} '.format(letter = letter, question = possible_answers_shuffled_list[_][0]))
     print()
+    answer = get_correct_answer("Choose one of the following: a, b, c or d\n")
+    
+    for _ in range(len(possible_answers_shuffled_list)):   
+        if possible_answers_shuffled_list[_][0] == correct_answer:
+            correct_answer_from_shuffled = possible_answers_shuffled_list[_][1]
+            if answer == correct_answer_from_shuffled:
+                points += 1
+                print("This is the correct answer!")
+                print()
+            else:
+                print("Sorry, wrong answer :( The correct answer was:", correct_answer)
+                print()
 
 for _ in range(number_of_questions):
     show_question(_)
+print("End of the game. You scored", points, "point(s).")
