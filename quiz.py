@@ -35,7 +35,6 @@ number_of_questions = get_correct_prompt("How many questions do want to be asked
 quiz_API_url = 'https://opentdb.com/api.php?amount={number_of_questions}&type=multiple'.format(number_of_questions=number_of_questions)
 response = requests.get(quiz_API_url)
 json_obj = response.json()["results"]
-all_answers = list()
 incorrect_answers = list()
 correct_answer = list()
 points = 0
@@ -47,7 +46,6 @@ def show_question(question):
     show_answers(question)
 
 def show_answers(question):
-    global all_answers
     global incorrect_answers
     global possible_answers
     global points
